@@ -1,34 +1,57 @@
-# 🎓 API de Gestão de Estudantes e Matrículas
+# 🎓 API de Gestão Escolar com FastAPI e PostgreSQL
 
-Uma API RESTful desenvolvida com **FastAPI** e **PostgreSQL** para o gerenciamento de alunos e suas respectivas matrículas em disciplinas. Este projeto utiliza o **SQLAlchemy** como ORM para a comunicação com o banco de dados e o **Pydantic** para validação de dados.
+Esta é uma API RESTful desenvolvida com **FastAPI** e **SQLAlchemy** para gerenciar o ecossistema de uma instituição de ensino. O sistema permite o cadastro e gerenciamento de estudantes, professores, disciplinas e o controle de matrículas, utilizando o **PostgreSQL** como banco de dados relacional.
+
+---
 
 ## 🚀 Tecnologias Utilizadas
 
 *   **Python 3**
-*   **FastAPI**: Framework web rápido e moderno para construção de APIs.
-*   **PostgreSQL**: Banco de dados relacional.
-*   **SQLAlchemy**: ORM (Object Relational Mapper) para manipulação do banco de dados.
-*   **Pydantic**: Validação de dados e serialização (Schemas).
-*   **Uvicorn**: Servidor ASGI para rodar a aplicação FastAPI.
-*   **Psycopg2**: Adaptador de banco de dados PostgreSQL para Python.
+*   **FastAPI:** Framework web moderno e de alta performance para construção de APIs.
+*   **SQLAlchemy:** ORM (Object Relational Mapper) para comunicação eficiente e orientada a objetos com o banco de dados.
+*   **Pydantic:** Para validação e serialização de dados (Schemas).
+*   **PostgreSQL:** Sistema de gerenciamento de banco de dados relacional.
+*   **Uvicorn:** Servidor ASGI para execução da aplicação.
 
-## ⚙️ Funcionalidades Implementadas
+---
 
-Até o momento, a API possui os seguintes recursos (CRUD):
+## 🗄️ Estrutura do Banco de Dados
 
-*   **Estudantes:**
-    *   `POST /estudantes`: Criação de um novo estudante (nome e idade).
-    *   `GET /estudantes`: Listagem de todos os estudantes cadastrados.
-    *   `DELETE /estudantes/{estudante_id}`: Exclusão de um estudante específico. A exclusão de um estudante aciona o *Cascade Delete*, removendo automaticamente todas as suas matrículas associadas.
-*   **Matrículas:**
-    *   `POST /matriculas`: Matrícula de um estudante existente em uma disciplina (vinculado pelo `estudante_id`).
-    *   `GET /matriculas`: Listagem de todas as matrículas ativas.
-    *   `DELETE /matriculas/{matricula_id}`: Exclusão de uma matrícula específica sem afetar o estudante.
+A modelagem do banco de dados reflete regras de negócio reais do ambiente acadêmico:
 
-## 📂 Estrutura do Projeto
+*   **Estudante ↔ Perfil (1:1):** Cada estudante pode ter um perfil detalhado (idade, endereço), e cada perfil pertence a um único estudante.
+*   **Professor ↔ Disciplina (1:N):** Um professor pode lecionar múltiplas disciplinas, mas cada disciplina está vinculada a apenas um professor responsável.
+*   **Estudante ↔ Disciplina (N:M):** Um estudante pode se matricular em várias disciplinas, e uma disciplina pode ter vários estudantes. Esse relacionamento é resolvido através da tabela associativa de **Matrículas**.
 
-*   `main.py`: Ponto de entrada da aplicação e definição das rotas (Endpoints).
-*   `models.py`: Definição dos modelos do banco de dados usando SQLAlchemy (Tabelas `estudantes` e `matriculas`).
-*   `schemas.py`: Definição dos esquemas Pydantic para validação de requisições e respostas.
-*   `database.py`: Configuração da conexão com o banco de dados PostgreSQL e criação da sessão.
+---
 
+## 🌐 Endpoints da API
+
+A documentação interativa (Swagger UI) é gerada automaticamente pelo FastAPI. A API disponibiliza os seguintes endpoints:
+
+### 🧑‍🎓 Estudantes
+*   `GET /estudantes/`: Lista todos os estudantes cadastrados.
+*   `POST /estudantes/`: Cria um novo estudante (suporta a criação simultânea do Perfil aninhado).
+
+### 👨‍🏫 Professores
+*   `GET /professores/`: Lista todos os professores.
+*   `POST /professores/`: Cadastra um novo professor.
+
+### 📚 Disciplinas
+*   `GET /disciplinas/`: Lista todas as disciplinas ofertadas.
+*   `POST /disciplinas/`: Cria uma nova disciplina (exige o envio do `professor_id`).
+
+### 📝 Matrículas
+*   `GET /matriculas/`: Lista todas as matrículas ativas no sistema.
+*   `POST /matriculas/`: Vincula um estudante a uma disciplina (exige o envio do `estudante_id` e `disciplina_id`).
+
+---
+
+## ⚙️ Como Executar o Projeto Localmente
+
+Siga os passos abaixo para rodar a aplicação na sua máquina:
+
+### 1. Clone o Repositório
+git clone [https://github.com/danielbramos4/criacaoAPIGest-oEstudantesEMatr-culascomPostgreSQL.git](https://github.com/danielbramos4/criacaoAPIGest-oEstudantesEMatr-culascomPostgreSQL.git)
+
+cd criacaoAPIGest-oEstudantesEMatr-culascomPostgreSQL
